@@ -31,11 +31,12 @@ public protocol UIViewConstraintBuildable: ContraintBuildable {
 
 extension UIView: UIViewConstraintBuildable {
 	public func applyConstraints(@ConstraintBuilder _ builder: (UIView) -> [NSLayoutConstraint]) {
+		translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate(builder(self))
 	}
 	
 	public func extend(to view: UIView) {
-		NSLayoutConstraint.build {
+		applyConstraints { _ in
 			leadingAnchor.constraint(equalTo: view.leadingAnchor)
 			trailingAnchor.constraint(equalTo: view.trailingAnchor)
 			topAnchor.constraint(equalTo: view.topAnchor)
@@ -44,14 +45,14 @@ extension UIView: UIViewConstraintBuildable {
 	}
 	
 	public func center(in view: UIView) {
-		NSLayoutConstraint.build {
+		applyConstraints { _ in
 			centerXAnchor.constraint(equalTo: view.centerXAnchor)
 			centerYAnchor.constraint(equalTo: view.centerYAnchor)
 		}
 	}
 	
 	public func extend(to layoutGuide: UILayoutGuide) {
-		NSLayoutConstraint.build {
+		applyConstraints { _ in
 			leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor)
 			trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor)
 			topAnchor.constraint(equalTo: layoutGuide.topAnchor)
@@ -60,7 +61,7 @@ extension UIView: UIViewConstraintBuildable {
 	}
 	
 	public func center(in layoutGuide: UILayoutGuide) {
-		NSLayoutConstraint.build {
+		applyConstraints { _ in
 			centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor)
 			centerYAnchor.constraint(equalTo: layoutGuide.centerYAnchor)
 		}
