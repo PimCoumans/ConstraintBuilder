@@ -6,10 +6,10 @@ import AppKit
 
 @resultBuilder
 public struct ConstraintBuilder {
-	static func buildBlock(_ components: NSLayoutConstraint...) -> [NSLayoutConstraint] {
+	public static func buildBlock(_ components: NSLayoutConstraint...) -> [NSLayoutConstraint] {
 		Array(components)
 	}
-	static func buildBlock(_ components: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
+	public static func buildBlock(_ components: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
 		Array(components)
 	}
 }
