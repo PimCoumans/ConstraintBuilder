@@ -32,20 +32,22 @@ public extension NSLayoutConstraint {
 	}
 }
 
-public protocol ContraintBuildable {
+public protocol ConstraintBuildable {
+	associatedtype Constrained
+	/// Create and activate constraints with this view as the main subject
+	/// ```swift
+	/// view.applyConstraints {
+	///     $0.leadingAnchor.constraint(equalTo: otherView.leadingAnchor)
+	///     $0.centerYAnchor.constraint(equalTo: otherView.centerYAnchor)
+	/// }
+	/// ```
+	/// - Parameter builder: Constraint builder to add the constraints from
+	func applyConstraints(@ConstraintBuilder _ builder: (Constrained) -> [NSLayoutConstraint])
 	/// Extends all edges to the edges of the provided view
 	/// - Parameter view: View of which edges should be extended to
-	func extend(to view: Self)
+	func extend(to other: Constrained)
 	
 	/// Aligns center with center of provided view
 	/// - Parameter view: View of which center should be aligned to
-	func center(in view: Self)
-	
-	/// Extends all edges to the edges of the superview
-	/// Should result in `assertionFailure` when no superview is available
-	func extendToSuperview()
-	
-	/// Aligns center with center of superview
-	/// Should result in `assertionFailure` when no superview is available
-	func centerInSuperview()
+	func center(in other: Constrained)
 }

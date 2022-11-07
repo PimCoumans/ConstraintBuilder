@@ -1,16 +1,20 @@
 #if canImport(UIKit)
 import UIKit
 
-public protocol UIViewConstraintBuildable: ContraintBuildable {
-	/// Create and activate constriants with this view as the main subject
-	/// ```swift
-	/// view.applyConstraints {
-	///     $0.leadingAnchor.constraint(equalTo: otherView.leadingAnchor)
-	///     $0.centerYAnchor.constraint(equalTo: otherView.centerYAnchor)
-	/// }
-	/// ```
-	/// - Parameter builder: Constraint builder to add the constriants from
-	func applyConstraints(@ConstraintBuilder _ builder: (UIView) -> [NSLayoutConstraint])
+extension Collection where Element: ConstraintBuildable {
+	public func applyConstraints(@ConstraintBuilder _ builder: (Element) -> [NSLayoutConstraint]) {
+		NSLayoutConstraint.activate(flatMap { builder($0) })
+	}
+}
+
+public protocol UIViewConstraintBuildable: ConstraintBuildable {
+	/// Extends all edges to the edges of the superview
+	/// Should result in `assertionFailure` when no superview is available
+	func extendToSuperview()
+	
+	/// Aligns center with center of superview
+	/// Should result in `assertionFailure` when no superview is available
+	func centerInSuperview()
 	
 	/// Extends all edges to provided layout guide
 	/// - Parameter view: UILayoutGuide of which edges should be extended to
@@ -35,19 +39,19 @@ extension UIView: UIViewConstraintBuildable {
 		NSLayoutConstraint.activate(builder(self))
 	}
 	
-	public func extend(to view: UIView) {
+	public func extend(to other: UIView) {
 		applyConstraints { _ in
-			leadingAnchor.constraint(equalTo: view.leadingAnchor)
-			trailingAnchor.constraint(equalTo: view.trailingAnchor)
-			topAnchor.constraint(equalTo: view.topAnchor)
-			bottomAnchor.constraint(equalTo: view.bottomAnchor)
+			leadingAnchor.constraint(equalTo: other.leadingAnchor)
+			trailingAnchor.constraint(equalTo: other.trailingAnchor)
+			topAnchor.constraint(equalTo: other.topAnchor)
+			bottomAnchor.constraint(equalTo: other.bottomAnchor)
 		}
 	}
 	
-	public func center(in view: UIView) {
+	public func center(in other: UIView) {
 		applyConstraints { _ in
-			centerXAnchor.constraint(equalTo: view.centerXAnchor)
-			centerYAnchor.constraint(equalTo: view.centerYAnchor)
+			centerXAnchor.constraint(equalTo: other.centerXAnchor)
+			centerYAnchor.constraint(equalTo: other.centerYAnchor)
 		}
 	}
 	
