@@ -75,7 +75,7 @@ public protocol ConstraintBuildable {
 
 // Conformance to `ConstraintBuildable` for `NSLayoutGuide` and `UILayoutGuide`
 extension LayoutGuide: ConstraintBuildable {
-	public func applyConstraints(_ builder: (LayoutGuide) -> [NSLayoutConstraint]) {
+	public func applyConstraints(@ConstraintBuilder _ builder: (LayoutGuide) -> [NSLayoutConstraint]) {
 		NSLayoutConstraint.activate(builder(self))
 	}
 }

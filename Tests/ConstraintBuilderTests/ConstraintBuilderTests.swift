@@ -24,14 +24,6 @@ final class ConstraintBuilderTests: XCTestCase {
 		superview.addLayoutGuide(guide)
 		superview.addSubview(view)
 	}
-
-	func testGuideExtendToView() {
-		guide.extend(to: superview)
-	}
-
-	func testViewExtendToGuide() {
-		view.extend(to: guide)
-	}
 	
 	func testExtendToSuperview() {
 		view.extendToSuperview()
@@ -41,8 +33,28 @@ final class ConstraintBuilderTests: XCTestCase {
 		view.centerInSuperview()
 	}
 
+	func textConstraintBuilding() {
+		view.applyConstraints {
+			$0.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
+		}
+	}
+
 	func testAspectInSuperview() {
 		var ratioConstraint = view.aspectFit(in: superview)
 		ratioConstraint = ratioConstraint.updatingMultiplier(9/16)
+	}
+
+	func textGuideConstraintBuilding() {
+		guide.applyConstraints {
+			$0.leadingAnchor.constraint(equalTo: superview.leadingAnchor)
+		}
+	}
+
+	func testGuideExtendToView() {
+		guide.extend(to: superview)
+	}
+
+	func testViewExtendToGuide() {
+		view.extend(to: guide)
 	}
 }
