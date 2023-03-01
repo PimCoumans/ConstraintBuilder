@@ -1,6 +1,12 @@
 # ConstraintBuilder
 
-Convenience Auto Layout methods, applying constraints through a function builder
+Convenience Auto Layout methods and ability to apply your constraints through a function builder
+
+```swift
+someView.extendToSuperview()
+someOtherView.extendToSuperviewLayoutMargins()
+centeredView.center(in: mySpecialLayoutGuide)
+```
 
 ```swift
 someView.applyConstraints {
