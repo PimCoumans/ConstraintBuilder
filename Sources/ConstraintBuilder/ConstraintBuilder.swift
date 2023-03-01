@@ -2,11 +2,13 @@
 import UIKit
 public typealias LayoutPriority = UILayoutPriority
 public typealias LayoutGuide = UILayoutGuide
+extension UILayoutGuide: LayoutContainer { }
 extension UIView: LayoutContainerView { }
 #elseif canImport(AppKit)
 import AppKit
 public typealias LayoutPriority = NSLayoutConstraint.Priority
 public typealias LayoutGuide = NSLayoutGuide
+extension NSLayoutGuide: LayoutContainer { }
 extension NSView: LayoutContainerView { }
 #endif
 
@@ -23,8 +25,6 @@ public protocol LayoutContainer {
 	var centerXAnchor: NSLayoutXAxisAnchor { get }
 	var centerYAnchor: NSLayoutYAxisAnchor { get }
 }
-
-extension LayoutGuide: LayoutContainer { }
 
 // Layout guides available in NSView (from macOS 11.0) and UIView (from iOS 11.0)
 public protocol LayoutContainerView: LayoutContainer {
@@ -44,6 +44,7 @@ public struct ConstraintBuilder {
 	}
 }
 
+/// Convenience methods to apply layout constraints
 public protocol ConstraintBuildable {
 	associatedtype Constrained: LayoutContainer
 	/// Create and activate constraints with this view as the main subject
@@ -72,6 +73,14 @@ public protocol ConstraintBuildable {
 	func aspectFit(in other: any LayoutContainer) -> NSLayoutConstraint
 }
 
+// Conformance to `ConstraintBuildable` for `NSLayoutGuide` and `UILayoutGuide`
+extension LayoutGuide: ConstraintBuildable {
+	public func applyConstraints(_ builder: (LayoutGuide) -> [NSLayoutConstraint]) {
+		NSLayoutConstraint.activate(builder(self))
+	}
+}
+
+/// Convenience methods to apply layout constraints to views
 public protocol ViewConstraintBuildable: ConstraintBuildable where Constrained: LayoutContainerView {
 	/// Use superview if available,  `assertionFailure()` if not
 	func withSuperview(_ method: (Constrained) -> Void)
@@ -95,6 +104,7 @@ public protocol ViewConstraintBuildable: ConstraintBuildable where Constrained: 
 	func extendToSuperviewLayoutMargins()
 }
 
+// Default implementations of convenience methods
 extension ConstraintBuildable where Self: LayoutContainer {
 	public func extend(to other: any LayoutContainer) {
 		applyConstraints { _ in
@@ -133,7 +143,7 @@ extension ConstraintBuildable where Self: LayoutContainer {
 		return aspectRatioConstraint
 	}
 }
-
+// Default implementations of view convenience methods
 extension ViewConstraintBuildable where Self: LayoutContainerView {
 	public func extendToSuperview() {
 		withSuperview(extend(to:))
