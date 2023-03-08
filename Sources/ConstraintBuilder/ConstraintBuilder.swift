@@ -83,7 +83,7 @@ extension LayoutGuide: ConstraintBuildable {
 /// Convenience methods to apply layout constraints to views
 public protocol ViewConstraintBuildable: ConstraintBuildable where Constrained: LayoutContainerView {
 	/// Use superview if available,  `assertionFailure()` if not
-	func withSuperview(_ method: (Constrained) -> Void)
+	func withSuperview(_ method: (LayoutContainerView) -> Void)
 
 	/// Extends all edges to the edges of the superview
 	/// Should result in `assertionFailure` when no superview is available
