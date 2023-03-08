@@ -2,6 +2,18 @@ import XCTest
 import ConstraintBuilder
 
 final class ConstraintBuilderTests: XCTestCase {
+	class CustomView: UIView {
+		let customGuide = UILayoutGuide()
+		override init(frame: CGRect) {
+			super.init(frame: frame)
+			addLayoutGuide(customGuide)
+			customGuide.extend(to: self)
+		}
+
+		required init?(coder: NSCoder) {
+			fatalError("init(coder:) has not been implemented")
+		}
+	}
 	#if canImport(UIKit) || canImport(tvOS)
 	var superview: UIView!
 	var view: UIView!
@@ -56,5 +68,17 @@ final class ConstraintBuilderTests: XCTestCase {
 
 	func testViewExtendToGuide() {
 		view.extend(to: guide)
+	}
+
+	func testCustomViewConstraints() {
+		let customView = CustomView()
+		superview.addSubview(customView)
+		customView.extendToSuperviewLayoutMargins()
+		customView.applyConstraints {
+			$0.customGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+			$0.customGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+			$0.customGuide.topAnchor.constraint(equalTo: view.topAnchor)
+			$0.customGuide.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+		}
 	}
 }
