@@ -81,4 +81,22 @@ final class ConstraintBuilderTests: XCTestCase {
 			$0.customGuide.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		}
 	}
+
+    func testControlFlow() { let trueValue = true
+        NSLayoutConstraint.deactivate(view.constraints)
+        let expectedConstraint = view.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 10)
+        let unexpectedConstraint = view.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 10)
+        view.applyConstraints {
+            if trueValue {
+                expectedConstraint
+            } else {
+                unexpectedConstraint
+            }
+            $0.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
+            $0.topAnchor.constraint(equalTo: superview.topAnchor)
+            $0.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+        }
+        XCTAssert(expectedConstraint.isActive)
+        XCTAssertFalse(unexpectedConstraint.isActive)
+    }
 }

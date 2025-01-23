@@ -39,9 +39,24 @@ public struct ConstraintBuilder {
 	public static func buildBlock(_ components: NSLayoutConstraint...) -> [NSLayoutConstraint] {
 		Array(components)
 	}
-	public static func buildBlock(_ components: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
-		Array(components)
-	}
+    public static func buildBlock() -> [NSLayoutConstraint] {
+        []
+    }
+    public static func buildBlock(_ components: [NSLayoutConstraint]...) -> [NSLayoutConstraint] {
+        components.flatMap { $0 }
+    }
+    public static func buildEither(first component: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
+        component
+    }
+    public static func buildEither(second component: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
+        component
+    }
+    public static func buildOptional(_ component: [NSLayoutConstraint]?) -> [NSLayoutConstraint] {
+        component ?? []
+    }
+    public static func buildExpression(_ expression: NSLayoutConstraint) -> [NSLayoutConstraint] {
+        [expression]
+    }
 }
 
 /// Convenience methods to apply layout constraints
